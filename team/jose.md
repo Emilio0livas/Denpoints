@@ -17,4 +17,4 @@ Preferred communication style
 I prefer communication through Discord.
 
 Availability
-Im free in the weekdays before 6pm.
+Im free in the weekdays before 6:00 pm.

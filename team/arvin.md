@@ -28,5 +28,11 @@ I don't think I have had a concha in my life but I like the new 85 degree bakery
 
 \## Preferred communication style
 
-Clear messages, direct tasks with appropriate deadlines. 
+Clear messages, direct tasks with appropriate deadlines.
+
+
+
+\## Availability 
+
+I am usually available in the evening and at night. I will reply to team messages however as soon as possible. 
 

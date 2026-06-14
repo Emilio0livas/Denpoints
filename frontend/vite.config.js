@@ -1,8 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
 export default defineConfig({
-  base: '/team-6-s26/lab-d-jrosas/',
   plugins: [react()],
+  base: '/team-6-s26/', // Must match the working URL directory name exactly
 })

@@ -6,7 +6,8 @@ import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter basename="/team-6-s26/lab-d-jrosas">
+    {/* Set this exactly to your team directory name */}
+    <BrowserRouter basename="/team-6-s26">
       <App />
     </BrowserRouter>
   </React.StrictMode>,

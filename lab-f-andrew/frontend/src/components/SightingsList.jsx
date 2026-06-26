@@ -1,41 +1,77 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react'
+import { API_BASE_URL } from '../api.js'
 
-export default function SightingsList() {
-  const navigate = useNavigate();
+function Sightings() {
+  const [sightings, setSightings] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
-  const staticSightings = [
-    { loc: "Kern River Parkway", count: 2, img: "📷 Photo", date: "Jun 9, 2026 19:42", note: "Two juveniles near the dry creek bed, possibly siblings. No adults visible." },
-    { loc: "CSUB North Campus", count: 1, img: null, date: "Jun 8, 2026 20:15", note: "Single adult observed at dusk near parking lot C. Appeared healthy." },
-    { loc: "Panorama Bluffs", count: 3, img: "📷 Photo", date: "Jun 6, 2026 06:30", note: "Family group — one adult, two pups. Observed for ~10 minutes." },
-    { loc: "Alfred Harrell Hwy", count: 1, img: null, date: "Jun 4, 2026 21:00", note: "Fox crossed the road heading east. Brief sighting from vehicle." },
-    { loc: "Hart Memorial Park", count: 2, img: "📷 Photo", date: "Jun 2, 2026 07:10", note: "Pair foraging near the ball fields at dawn." }
-  ];
+  useEffect(() => {
+    async function loadSightings() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/sightings`)
+
+        if (!response.ok) {
+          throw new Error(`API request failed with status ${response.status}`)
+        }
+
+        const data = await response.json()
+        setSightings(data)
+      } catch (err) {
+        console.error(err)
+        setError('Could not load sightings from the API.')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadSightings()
+  }, [])
+
+  if (loading) {
+    return (
+      <section>
+        <h2>Sightings</h2>
+        <p>Loading sightings...</p>
+      </section>
+    )
+  }
+
+  if (error) {
+    return (
+      <section>
+        <h2>Sightings</h2>
+        <p>{error}</p>
+        <p>Check that your Lab E3 backend is running and that your API URL is correct.</p>
+      </section>
+    )
+  }
 
   return (
-    <div className="bg-white">
-      <div className="flex-hero" style={{marginBottom: '24px'}}>
-        <h1>Sightings Ledger</h1>
-        <button onClick={() => navigate('/submit')}>+ Submit Sighting</button>
-      </div>
+    <section>
+      <h2>Sightings</h2>
 
-      <div>
-        {staticSightings.map((item, index) => (
-          <div key={index} className="flex-sighting">
-            <div>
-              <div style={{marginBottom: '4px'}}>
-                <h3>{item.loc}</h3>
-                <span className="badge">{item.count} Fox(es)</span>
-                {item.img && <span className="badge" style={{backgroundColor: '#f9fafb', border: '1px solid #e5e7eb'}}>{item.img}</span>}
-              </div>
-              <p>{item.note}</p>
-            </div>
-            <div style={{fontSize: '12px', color: '#9ca3af', textAlign: 'right', whiteSpace: 'nowrap'}}>
-              {item.date}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+      <p>
+        These records are loaded from the Express/MySQL API.
+      </p>
+
+      {sightings.length === 0 ? (
+        <p>No sightings were found.</p>
+      ) : (
+        <ul>
+          {sightings.map((sighting) => (
+            <li key={sighting.id}>
+              <strong>{sighting.location_name}</strong>
+              {' - '}
+              {sighting.observer_name}
+              {' - '}
+              {sighting.sighting_date}
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  )
 }
+
+export default Sightings

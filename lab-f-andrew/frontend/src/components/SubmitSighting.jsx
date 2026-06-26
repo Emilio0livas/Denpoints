@@ -1,45 +1,103 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react'
+import { API_BASE_URL } from '../api.js'
 
-export default function SubmitSighting() {
-  const navigate = useNavigate();
+function SubmitSighting() {
+  const [observerName, setObserverName] = useState('')
+  const [sightingDate, setSightingDate] = useState('')
+  const [locationName, setLocationName] = useState('')
+  const [message, setMessage] = useState('')
+  const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert("Prototype Submission Triggered! Routing directly to listing view.");
-    navigate('/sightings');
-  };
+  async function handleSubmit(event) {
+    event.preventDefault()
+
+    setMessage('')
+    setError('')
+    setSubmitting(true)
+
+    const newSighting = {
+      observer_name: observerName,
+      sighting_date: sightingDate,
+      location_name: locationName
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/sightings`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newSighting)
+      })
+
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`)
+      }
+
+      const result = await response.json()
+
+      setMessage(`Sighting created with ID ${result.id}. Check the Sightings page to see the new record.`)
+      setObserverName('')
+      setSightingDate('')
+      setLocationName('')
+    } catch (err) {
+      console.error(err)
+      setError('Could not create the sighting. Check your API URL and backend.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   return (
-    <div style={{maxWidth: '768px', margin: '0 auto'}}>
-      <p style={{cursor: 'pointer', marginBottom: '16px'}} onClick={() => navigate('/')}>← Back to Dashboard</p>
-      
-      <div className="bg-white">
-        <h2>Report a Sighting</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="form-grid">
-            <div><label>Date *</label><input type="date" required /></div>
-            <div><label>Time *</label><input type="time" required /></div>
-          </div>
-          <div style={{marginBottom: '16px'}}>
-            <label>Location *</label>
-            <input type="text" required placeholder="Place name or address (e.g. Kern River Parkway)" />
-          </div>
-          <div className="form-grid">
-            <div><label>Latitude (Optional)</label><input type="text" placeholder="35.3733" /></div>
-            <div><label>Longitude (Optional)</label><input type="text" placeholder="-119.0187" /></div>
-          </div>
-          <div style={{marginBottom: '16px'}}>
-            <label>Number of Foxes Observed *</label>
-            <input type="number" min="1" defaultValue="1" required />
-          </div>
-          <div style={{marginBottom: '24px'}}>
-            <label>Photo (Optional)</label>
-            <div className="placeholder-box" style={{padding: '16px'}}>Click to upload files (Mock Framework)</div>
-          </div>
-          <button type="submit" style={{width: '100%'}}>Submit Record</button>
-        </form>
-      </div>
-    </div>
-  );
+    <section>
+      <h2>Submit Sighting</h2>
+
+      <p>
+        This form sends a POST request to the Express/MySQL API.
+      </p>
+
+      <form onSubmit={handleSubmit}>
+        <label>
+          Observer name
+          <input
+            type="text"
+            value={observerName}
+            onChange={(event) => setObserverName(event.target.value)}
+            required
+          />
+        </label>
+
+        <label>
+          Sighting date
+          <input
+            type="date"
+            value={sightingDate}
+            onChange={(event) => setSightingDate(event.target.value)}
+            required
+          />
+        </label>
+
+        <label>
+          Location name
+          <input
+            type="text"
+            value={locationName}
+            onChange={(event) => setLocationName(event.target.value)}
+            placeholder="Example: CSUB campus"
+            required
+          />
+        </label>
+
+        <button type="submit" disabled={submitting}>
+          {submitting ? 'Submitting...' : 'Submit Sighting'}
+        </button>
+      </form>
+
+      {message && <p>{message}</p>}
+      {error && <p>{error}</p>}
+    </section>
+  )
 }
+
+export default SubmitSighting

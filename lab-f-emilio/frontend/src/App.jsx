@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route, NavLink } from 'react-router-dom'; // Notice: BrowserRouter/Router is removed from here
 import Dashboard from './components/Dashboard';
-import SubmitSighting from './components/SubmitSighting';
+import SubmitSighting from './pages/SubmitSighting';
 import SightingsList from './components/SightingsList';
 import About from './components/About';
 

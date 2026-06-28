@@ -1,8 +1,8 @@
 import React from 'react';
 import { Routes, Route, NavLink } from 'react-router-dom'; // Notice: BrowserRouter/Router is removed from here
 import Dashboard from './components/Dashboard';
-import SubmitSighting from './components/SubmitSighting';
-import SightingsList from './components/SightingsList';
+import SubmitSighting from './pages/SubmitSighting';
+import SightingsList from './pages/Sightings';
 import About from './components/About';
 
 function App() {
@@ -48,7 +48,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/submit" element={<SubmitSighting />} />
-          <Route path="/sightings" element={<SightingsList />} />
+          <Route path="/sightings" element={<Sightings />} />
           <Route path="/about" element={<About />} />
         </Routes>
       </main>

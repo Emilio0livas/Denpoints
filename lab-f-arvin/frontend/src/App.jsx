@@ -2,7 +2,7 @@ import React from 'react';
 import { Routes, Route, NavLink } from 'react-router-dom'; // Notice: BrowserRouter/Router is removed from here
 import Dashboard from './components/Dashboard';
 import SubmitSighting from './pages/SubmitSighting';
-import SightingsList from './pages/Sightings';
+import Sightings from './pages/Sightings';
 import About from './components/About';
 
 function App() {

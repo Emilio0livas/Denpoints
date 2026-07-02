@@ -16,6 +16,15 @@ function isValidId(value) {
   return Number.isInteger(id) && id > 0;
 }
 
+function validateSighting(data) {
+  const {
+    observer_name,
+    sighting_date,
+    location_name
+  } = data;
+  return observer_name && sighting_date && location_name;
+}
+
 app.get("/health", (req, res) => {
   res.json({
     status: "ok",
@@ -110,7 +119,7 @@ app.post("/sightings", async (req, res) => {
       notes = null
     } = req.body;
 
-    if (!observer_name || !sighting_date || !location_name) {
+    if (!validateSighting(req.body)) {
       return res.status(400).json({
         error: "observer_name, sighting_date, and location_name are required"
       });
@@ -149,7 +158,7 @@ app.put("/sightings/:id", async (req, res) => {
       notes = null
     } = req.body;
 
-    if (!observer_name || !sighting_date || !location_name) {
+    if (!validateSighting(req.body)) {
       return res.status(400).json({
         error: "observer_name, sighting_date, and location_name are required"
       });
